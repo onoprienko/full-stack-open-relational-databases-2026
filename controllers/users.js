@@ -7,12 +7,12 @@ router.get('/', async (req, res) => {
   res.json(users)
 })
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
   try {
     const user = await User.create(req.body)
     res.json(user)
   } catch (error) {
-    return res.status(400).json({ error })
+    next(error)
   }
 })
 
@@ -25,7 +25,7 @@ router.get('/:id', async (req, res) => {
   }
 })
 
-router.put('/:username', async (req, res) => {
+router.put('/:username', async (req, res, next) => {
   try {
     const user = await User.findOne({
       where: { username: req.params.username },
@@ -35,7 +35,7 @@ router.put('/:username', async (req, res) => {
     await user.save()
     res.json(req.user)
   } catch (error) {
-    return res.status(400).json({ error })
+    next(error)
   }
 })
 

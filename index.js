@@ -28,6 +28,11 @@ const errorHandler = (error, request, response, next) => {
     return response.status(400).send({ error: 'malformatted id' })
   }
 
+  if (error.name === 'SequelizeValidationError') {
+    const errorsMessages = error.errors.map((e) => e.message)
+    return response.status(400).send({ error: errorsMessages })
+  }
+
   next(error)
 }
 
