@@ -18,21 +18,21 @@ router.get('/', async (req, res) => {
   }
 })
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
   try {
     const blog = await Blog.create({ ...req.body })
     return res.json(blog)
   } catch (error) {
-    return res.status(400).json({ error })
+    next(error)
   }
 })
 
-router.delete('/:id', blogFinder, async (req, res) => {
+router.delete('/:id', blogFinder, async (req, res, next) => {
   try {
     await req.blog.destroy()
     res.status(204).end()
   } catch (error) {
-    res.status(400).json({ error })
+    next(error)
   }
 })
 
@@ -40,13 +40,13 @@ router.delete('/:id', blogFinder, async (req, res) => {
 //   res.json(req.note)
 // })
 
-router.put('/:id', blogFinder, async (req, res) => {
+router.put('/:id', blogFinder, async (req, res, next) => {
   try {
     req.blog.likes = req.body.likes
     await req.blog.save()
     res.json(req.blog)
   } catch (error) {
-    res.status(404).json({ error })
+    next(error)
   }
 })
 
