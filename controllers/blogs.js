@@ -8,7 +8,7 @@ const blogFinder = async (req, res, next) => {
   next()
 }
 
-router.get('/api/blogs', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const blogs = await Blog.findAll()
     console.log(JSON.stringify(blogs))
@@ -18,7 +18,7 @@ router.get('/api/blogs', async (req, res) => {
   }
 })
 
-router.post('/api/blogs', async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const blog = await Blog.create({ ...req.body })
     return res.json(blog)
@@ -27,7 +27,7 @@ router.post('/api/blogs', async (req, res) => {
   }
 })
 
-router.delete('/api/blogs/:id', blogFinder, async (req, res) => {
+router.delete('/:id', blogFinder, async (req, res) => {
   try {
     await req.blog.destroy()
     res.status(204).end()
@@ -40,10 +40,14 @@ router.delete('/api/blogs/:id', blogFinder, async (req, res) => {
 //   res.json(req.note)
 // })
 
-// router.put('/:id', noteFinder, async (req, res) => {
-//   req.note.important = req.body.important
-//   await req.note.save()
-//   res.json(req.note)
-// })
+router.put('/:id', blogFinder, async (req, res) => {
+  try {
+    req.blog.likes = req.body.likes
+    await req.blog.save()
+    res.json(req.blog)
+  } catch (error) {
+    res.status(404).json({ error })
+  }
+})
 
 module.exports = router
