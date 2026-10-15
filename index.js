@@ -14,46 +14,90 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
   },
 })
 
-class Note extends Model {}
-Note.init(
+class Blog extends Model {}
+Blog.init(
   {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    content: {
+    author: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    url: {
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    important: {
-      type: DataTypes.BOOLEAN,
+    title: {
+      type: DataTypes.TEXT,
+      allowNull: false,
     },
-    date: {
-      type: DataTypes.DATE,
+    likes: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
     },
   },
   {
     sequelize,
     underscored: true,
     timestamps: false,
-    modelName: 'note',
+    modelName: 'blog',
   },
 )
+Blog.sync()
 
-app.get('/api/notes', async (req, res) => {
-  const notes = await Note.findAll()
-  res.json(notes)
-})
-
-app.post('/api/notes', async (req, res) => {
+app.get('/api/blogs', async (req, res) => {
   try {
-    const note = await Note.create({ ...req.body, date: new Date() })
-    return res.json(note)
+    const blogs = await Blog.findAll()
+    console.log(JSON.stringify(blogs))
+    res.json(blogs)
   } catch (error) {
     return res.status(400).json({ error })
   }
 })
+
+app.post('/api/blogs', async (req, res) => {
+  try {
+    const blog = await Blog.create({ ...req.body })
+    return res.json(blog)
+  } catch (error) {
+    return res.status(400).json({ error })
+  }
+})
+
+app.delete('/api/blogs/:id', async (req, res) => {
+  try {
+    const blog = await Blog.findByPk(req.params.id)
+    if (!blog) return res.status(404).json({ error: 'Blog not found' })
+    await blog.destroy()
+    res.status(204).end()
+  } catch (error) {
+    res.status(400).json({ error })
+  }
+})
+
+// app.get('/api/notes/:id', async (req, res) => {
+//   const note = await Note.findByPk(req.params.id)
+//   if (note) {
+//     res.json(note)
+//   } else {
+//     res.status(404).end()
+//   }
+// })
+
+// app.put('/api/notes/:id', async (req, res) => {
+//   const note = await Note.findByPk(req.params.id)
+//   if (note) {
+//     note.important = req.body.important
+//     await note.save()
+//     res.json(note)
+//   } else {
+//     res.status(404).end()
+//   }
+// })
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
