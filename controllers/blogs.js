@@ -27,7 +27,11 @@ const blogFinder = async (req, res, next) => {
 
 router.get('/', async (req, res) => {
   try {
-    const blogs = await Blog.findAll()
+    const blogs = await Blog.findAll({
+      include: {
+        model: User,
+      },
+    })
     console.log(JSON.stringify(blogs))
     res.json(blogs)
   } catch (error) {
