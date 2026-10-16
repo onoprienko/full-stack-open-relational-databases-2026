@@ -27,16 +27,30 @@ const blogFinder = async (req, res, next) => {
 }
 
 router.get('/', async (req, res) => {
+  const search = req.query.search
+  const where = search
+    ? {
+        [Op.or]: [
+          {
+            title: {
+              [Op.substring]: search,
+            },
+          },
+          {
+            author: {
+              [Op.substring]: search,
+            },
+          },
+        ],
+      }
+    : null
+
   try {
     const blogs = await Blog.findAll({
       include: {
         model: User,
       },
-      where: {
-        title: req.query.search
-          ? { [Op.substring]: req.query.search }
-          : { [Op.ne]: null },
-      },
+      where,
     })
     console.log(JSON.stringify(blogs))
     res.json(blogs)
