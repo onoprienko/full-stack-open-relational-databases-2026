@@ -45,10 +45,23 @@ router.post('/', tokenExtractor, async (req, res, next) => {
   }
 })
 
-router.delete('/:id', blogFinder, async (req, res, next) => {
+router.delete('/:id', [blogFinder, tokenExtractor], async (req, res, next) => {
   try {
-    await req.blog.destroy()
-    res.status(204).end()
+    const user = await User.findByPk(req.decodedToken.id, {
+      include: {
+        model: Blog,
+      },
+    })
+
+    console.log('🔵', req.blog.id, user)
+    if (user?.blogs?.find((blog) => blog.id === req.blog.id)) {
+      await req.blog.destroy()
+      res.status(204).end()
+    } else {
+      return res
+        .status(403)
+        .json({ error: 'This user has no permissioin to delete this blog' })
+    }
   } catch (error) {
     next(error)
   }
