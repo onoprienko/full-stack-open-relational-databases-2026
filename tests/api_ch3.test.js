@@ -13,7 +13,10 @@ describe('Blogs API', () => {
   it('blogs are returned as json and initially empty', async () => {
     const response = await axios.get(`${baseUrl}/blogs`)
     assert.ok([200, 201].includes(response.status))
-    assert.strictEqual(response.headers['content-type'], 'application/json; charset=utf-8')
+    assert.strictEqual(
+      response.headers['content-type'],
+      'application/json; charset=utf-8',
+    )
     assert.strictEqual(Array.isArray(response.data), true)
     assert.strictEqual(response.data.length, 0)
   })
@@ -22,11 +25,11 @@ describe('Blogs API', () => {
     const newBlog = {
       title: 'Test Blog Post',
       author: 'Test Author',
-      url: 'https://example.com/test-blog'
+      url: 'https://example.com/test-blog',
     }
 
     const response = await axios.post(`${baseUrl}/blogs`, newBlog, {
-      headers: { Authorization: `Bearer ${testData.tokens[0]}` }
+      headers: { Authorization: `Bearer ${testData.tokens[0]}` },
     })
 
     assert.ok([200, 201].includes(response.status))
@@ -47,7 +50,7 @@ describe('Blogs API', () => {
     const blogId = blogsResponse.data[0].id
 
     const response = await axios.put(`${baseUrl}/blogs/${blogId}`, {
-      likes: 5
+      likes: 5,
     })
 
     assert.ok([200, 201].includes(response.status))
@@ -66,7 +69,7 @@ describe('Users API', () => {
   it('users have correct properties', async () => {
     const response = await axios.get(`${baseUrl}/users`)
     const user = response.data[0]
-    
+
     assert.ok(user.id)
     assert.ok(user.username)
     assert.ok(user.name)
@@ -83,7 +86,7 @@ describe('Authors API', () => {
 
   it('author stats have correct structure', async () => {
     const response = await axios.get(`${baseUrl}/authors`)
-    
+
     if (response.data.length > 0) {
       const author = response.data[0]
       assert.ok(author.author)

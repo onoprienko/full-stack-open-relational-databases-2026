@@ -22,7 +22,7 @@ if (process.env.TESTING) {
   app.use('/api/reset', testingRouter)
 
   app.get('/', async (request, response) => {
-    return response.status(200)
+    return response.status(200).send('Testing mode is active')
   })
 }
 
