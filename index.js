@@ -17,6 +17,15 @@ app.use('/api/users', usersRouter)
 app.use('/api/authors', authorsRouter)
 app.use('/api/login', loginRouter)
 
+if (process.env.TESTING) {
+  const testingRouter = require('./controllers/testing')
+  app.use('/api/reset', testingRouter)
+
+  app.get('/', async (request, response) => {
+    return response.status(200)
+  })
+}
+
 const start = async () => {
   await connectToDatabase()
   await syncModels()
