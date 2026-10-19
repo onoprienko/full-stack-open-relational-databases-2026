@@ -27,7 +27,7 @@ Blog.init(
       allowNull: false,
       defaultValue: 0,
     },
-    user_id: {
+    userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: { model: 'users', key: 'id' },

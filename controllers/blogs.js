@@ -49,6 +49,7 @@ router.get('/', async (req, res) => {
     const blogs = await Blog.findAll({
       include: {
         model: User,
+        as: 'user',
       },
       where,
       order: [['likes', 'DESC']],
@@ -63,8 +64,7 @@ router.get('/', async (req, res) => {
 router.post('/', tokenExtractor, async (req, res, next) => {
   try {
     const user = await User.findByPk(req.decodedToken.id)
-    console.log('🍎', user.toJSON().id)
-    const blog = await Blog.create({ ...req.body, user_id: user.toJSON().id })
+    const blog = await Blog.create({ ...req.body, userId: user.toJSON().id })
     return res.json(blog)
   } catch (error) {
     next(error)
@@ -76,6 +76,7 @@ router.delete('/:id', [blogFinder, tokenExtractor], async (req, res, next) => {
     const user = await User.findByPk(req.decodedToken.id, {
       include: {
         model: Blog,
+        as: 'blogs',
       },
     })
 

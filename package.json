@@ -9,6 +9,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon ./index.js localhost 3001",
+    "migration:down": "node util/rollback.js",
     "test": "cross-env TESTING=true node --test --test-concurrency=1 tests/api_ch3.test.js",
     "start:test": "cross-env TESTING=true node index.js"
   },
