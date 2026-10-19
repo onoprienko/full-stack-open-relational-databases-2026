@@ -31,6 +31,7 @@ ReadingList.init(
     underscored: true,
     timestamps: false,
     modelName: 'reading_list',
+    tableName: 'reading_list',
   },
 )
 
