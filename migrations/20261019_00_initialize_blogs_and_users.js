@@ -37,17 +37,22 @@ module.exports = {
         primaryKey: true,
         autoIncrement: true,
       },
-      username: {
-        type: DataTypes.STRING,
-        unique: true,
-        allowNull: false,
-        validate: {
-          isEmail: true,
-        },
+      author: {
+        type: DataTypes.TEXT,
+        allowNull: true,
       },
-      name: {
-        type: DataTypes.STRING,
+      url: {
+        type: DataTypes.TEXT,
         allowNull: false,
+      },
+      title: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+      },
+      likes: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
       },
       user_id: {
         type: DataTypes.INTEGER,
