@@ -18,7 +18,7 @@ app.use('/api/users', usersRouter)
 app.use('/api/authors', authorsRouter)
 app.use('/api/login', loginRouter)
 app.use('/api/logout', logoutRouter)
-app.use('/api/readinglist', ReadingList)
+app.use('/api/readinglists', ReadingList)
 
 if (process.env.TESTING) {
   const testingRouter = require('./controllers/testing')
@@ -40,17 +40,17 @@ const errorHandler = (error, request, response, next) => {
   console.error(error.message)
 
   if (error.name === 'CastError') {
-    return response.status(400).send({ error: 'malformatted id' })
+    return response.status(404).send({ error: 'malformatted id' })
   }
 
   if (error.name === 'SequelizeValidationError') {
     const errorsMessages = error.errors.map((e) => e.message)
-    return response.status(400).send({ error: errorsMessages })
+    return response.status(404).send({ error: errorsMessages })
   }
 
   if (error.name === 'SequelizeForeignKeyConstraintError') {
     return response
-      .status(400)
+      .status(404)
       .send({ error: 'malformatted id or id does not exist' })
   }
 

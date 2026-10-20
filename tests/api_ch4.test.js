@@ -36,21 +36,15 @@ before(async () => {
 
 describe('Reading Lists API', () => {
   it('can add a blog to reading list', async () => {
-    console.log('💛', createdBlogId, testData.users[0].id)
-
     const readingListEntry = {
       blogId: createdBlogId,
       userId: testData.users[0].id,
     }
 
-    console.log('💛', `${baseUrl}/readinglists`, readingListEntry)
-
     const response = await axios.post(
       `${baseUrl}/readinglists`,
       readingListEntry,
     )
-
-    console.log('💛', response)
 
     assert.ok([200, 201].includes(response.status))
     assert.strictEqual(response.data.blogId, createdBlogId)
