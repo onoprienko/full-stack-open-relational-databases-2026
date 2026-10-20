@@ -6,7 +6,7 @@ const { tokenExtractor } = require('../util/tokenExtractor')
 router.post('/', async (req, res, next) => {
   try {
     const readingList = await ReadingList.create(req.body)
-    res.json(readingList)
+    res.status(200).json(readingList)
   } catch (error) {
     next(error)
   }
