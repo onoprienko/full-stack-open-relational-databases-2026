@@ -4,6 +4,7 @@ const { Op } = require('sequelize')
 const { Blog } = require('../models')
 const { User } = require('../models')
 const { tokenExtractor } = require('../util/tokenExtractor')
+const { sessionControl } = require('../util/sessionControl')
 
 const blogFinder = async (req, res, next) => {
   req.blog = await Blog.findByPk(req.params.id)
@@ -46,7 +47,7 @@ router.get('/', async (req, res) => {
   }
 })
 
-router.post('/', tokenExtractor, async (req, res, next) => {
+router.post('/', [tokenExtractor, sessionControl], async (req, res, next) => {
   try {
     const user = await User.findByPk(req.decodedToken.id)
     const blog = await Blog.create({ ...req.body, userId: user.toJSON().id })
@@ -56,28 +57,32 @@ router.post('/', tokenExtractor, async (req, res, next) => {
   }
 })
 
-router.delete('/:id', [blogFinder, tokenExtractor], async (req, res, next) => {
-  try {
-    const user = await User.findByPk(req.decodedToken.id, {
-      include: {
-        model: Blog,
-        as: 'blogs',
-      },
-    })
+router.delete(
+  '/:id',
+  [blogFinder, tokenExtractor, sessionControl],
+  async (req, res, next) => {
+    try {
+      const user = await User.findByPk(req.decodedToken.id, {
+        include: {
+          model: Blog,
+          as: 'blogs',
+        },
+      })
 
-    console.log('🔵', req.blog.id, user)
-    if (user?.blogs?.find((blog) => blog.id === req.blog.id)) {
-      await req.blog.destroy()
-      res.status(204).end()
-    } else {
-      return res
-        .status(403)
-        .json({ error: 'This user has no permissioin to delete this blog' })
+      console.log('🔵', req.blog.id, user)
+      if (user?.blogs?.find((blog) => blog.id === req.blog.id)) {
+        await req.blog.destroy()
+        res.status(204).end()
+      } else {
+        return res
+          .status(403)
+          .json({ error: 'This user has no permissioin to delete this blog' })
+      }
+    } catch (error) {
+      next(error)
     }
-  } catch (error) {
-    next(error)
-  }
-})
+  },
+)
 
 // router.get('/:id', noteFinder, async (req, res) => {
 //   res.json(req.note)

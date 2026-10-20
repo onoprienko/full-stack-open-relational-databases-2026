@@ -10,13 +10,14 @@
     "start": "node index.js",
     "dev": "nodemon ./index.js localhost 3001",
     "migration:down": "node util/rollback.js",
-    "test": "cross-env TESTING=true node --test --test-concurrency=1 tests/api_ch3.test.js",
+    "test": "cross-env TESTING=true node --test --test-concurrency=1",
     "start:test": "cross-env TESTING=true node index.js"
   },
   "devDependencies": {
     "axios": "^1.20.0",
     "cross-env": "^10.1.0",
-    "nodemon": "^3.1.14"
+    "nodemon": "^3.1.14",
+    "sequelize-cli": "^6.6.5"
   },
   "dependencies": {
     "dotenv": "^18.0.8",
