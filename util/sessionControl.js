@@ -1,3 +1,5 @@
+const { Session } = require('../models')
+
 const sessionControl = async (req, res, next) => {
   try {
     const existedSession = await Session.findOne({
