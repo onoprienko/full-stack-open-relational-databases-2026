@@ -8,7 +8,7 @@ const sessionControl = async (req, res, next) => {
         user_id: req.decodedToken.id,
       },
     })
-    if (!existedSession) return res.status(403).end()
+    if (!existedSession) return res.status(401).end()
   } catch (error) {
     next(error)
   }

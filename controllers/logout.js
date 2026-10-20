@@ -4,7 +4,7 @@ const { tokenExtractor } = require('../util/tokenExtractor')
 const { sessionControl } = require('../util/sessionControl')
 const Session = require('../models/session')
 
-router.post('/', [tokenExtractor, sessionControl], async (req, res, next) => {
+router.delete('/', [tokenExtractor, sessionControl], async (req, res, next) => {
   try {
     await Session.destroy({
       where: {
@@ -12,7 +12,7 @@ router.post('/', [tokenExtractor, sessionControl], async (req, res, next) => {
         user_id: req.decodedToken.id,
       },
     })
-    return res.status(200).end()
+    return res.status(204).end()
   } catch (error) {
     next(error)
   }

@@ -4,6 +4,8 @@ const { ReadingList } = require('../models')
 const { tokenExtractor } = require('../util/tokenExtractor')
 
 router.post('/', async (req, res, next) => {
+  console.log('🍎', req.body)
+  if (!req.body.blogId || !req.body.userId) return res.status(400).end()
   try {
     const readingList = await ReadingList.create(req.body)
     res.status(200).json(readingList)
@@ -25,7 +27,7 @@ router.put('/:id', tokenExtractor, async (req, res, next) => {
         .json({ error: 'blog does not in user reading list' })
     }
 
-    readingList.readed = req.body.read
+    readingList.read = req.body.read
     await readingList.save()
     res.json(req.readingList)
   } catch (error) {

@@ -27,7 +27,7 @@ router.get('/:id', async (req, res) => {
   const read = req.query.read
   const where = read
     ? {
-        readed: {
+        read: {
           [Op.eq]: read,
         },
       }
@@ -49,7 +49,7 @@ router.get('/:id', async (req, res) => {
 
         through: {
           as: 'readingList',
-          attributes: ['id', ['readed', 'read']],
+          attributes: ['id', 'read'],
           where,
         },
       },
